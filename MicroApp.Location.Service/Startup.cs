@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -26,6 +27,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MicroApp.Location.Service
 {
@@ -47,7 +50,14 @@ namespace MicroApp.Location.Service
 
 
                services.AddHealthChecks();
-               services.AddControllers();
+               services.AddControllers()
+                    .AddNewtonsoftJson(options =>
+                    {
+                         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                         options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                    });
+
                services.AddSwaggerGen(c =>
                {
                     c.SwaggerDoc("v1", new OpenApiInfo
@@ -63,9 +73,9 @@ namespace MicroApp.Location.Service
                          },
                          Contact = new OpenApiContact
                          {
-                              Email = "ismail@ismailumar.com.ng",
+                              Email = "ismail@ismailumar.com",
                               Name = "Ismail Umar",
-                              Url = new Uri("https://www.ismailumar.com.ng"),
+                              Url = new Uri("https://www.ismailumar.com"),
                          },
                     });
 

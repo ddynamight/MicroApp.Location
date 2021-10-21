@@ -2,6 +2,7 @@
 using Pactify;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -27,12 +28,12 @@ namespace MicroApp.Location.Tests.Consumers
                               .UponReceiving("A GET request to get bicycle")
                               .With(request => request
                                    .WithMethod(HttpMethod.Get)
-                                   .WithPath("bicycles/1"))
+                                   .WithPath("/bicycles/1"))
                               .WillRespondWith(response => response
-                                   .WithHeader("Content-Type", "application/json")
+                                   .WithHeader("Content-Type", MediaTypeNames.Application.Json)
                                    .WithStatusCode(HttpStatusCode.OK)
                                    .WithBody<BicycleResponseModel>()))
-                    .PublishedViaHttp("http://localhost/pacts/provider/bicycles/consumer/frontend/version/1.0.0", HttpMethod.Put)
+                    .PublishedViaHttp("http://localhost:9292/pacts/provider/bicycles/consumer/frontend/version/1.0.0", HttpMethod.Put)
                     .MakeAsync();
 
           }

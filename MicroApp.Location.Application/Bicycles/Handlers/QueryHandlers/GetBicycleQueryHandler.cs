@@ -24,7 +24,7 @@ namespace MicroApp.Location.Application.Bicycles.Handlers.QueryHandlers
 
           public async Task<BicycleResponseModel> Handle(GetBicycleQuery request, CancellationToken cancellationToken)
           {
-               var bicycleFromDb = await _context.Bicycles.SingleAsync(e => e.Id.Equals(request.Id), cancellationToken);
+               var bicycleFromDb = await _context.Bicycles.SingleOrDefaultAsync(e => e.Id.Equals(request.Id), cancellationToken);
 
                return _mapper.Map<BicycleResponseModel>(bicycleFromDb);
           }

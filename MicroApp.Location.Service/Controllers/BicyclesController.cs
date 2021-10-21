@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
@@ -10,6 +11,7 @@ using MicroApp.Location.Application.Bicycles.Queries.GetBicycle;
 using MicroApp.Location.Application.Bicycles.Queries.GetBicycleList;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MicroApp.Location.Service.Controllers
 {
@@ -31,7 +33,7 @@ namespace MicroApp.Location.Service.Controllers
           /// gets a list of bicycles from the repository
           /// </summary>
           /// <returns>gets a list of Bicycle Models</returns>
-          [HttpGet, ProducesResponseType(typeof(List<BicycleResponseModel>), StatusCodes.Status200OK), ]
+          [HttpGet, Produces(MediaTypeNames.Application.Json), ProducesResponseType(typeof(List<BicycleResponseModel>), StatusCodes.Status200OK), ]
           public async Task<IActionResult> GetBicyclesAsync()
           {
                var bicycles = await mediator.Send(new GetBicyclesListQuery());
@@ -39,10 +41,10 @@ namespace MicroApp.Location.Service.Controllers
                return Ok(bicycles);
           }
 
-          [HttpGet("{id}", Name = "GetBicycle"), ProducesResponseType(typeof(BicycleResponseModel), StatusCodes.Status200OK), ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+          [HttpGet("{id}", Name = "GetBicycle"), Produces(MediaTypeNames.Application.Json), ProducesResponseType(typeof(BicycleResponseModel), StatusCodes.Status200OK), ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
           public async Task<IActionResult> GetBicycle(int id)
           {
-               var bicycle = await mediator.Send(new GetBicycleQuery
+               var bicycle = await mediator.Send<BicycleResponseModel>(new GetBicycleQuery
                {
                     Id = id
                });
